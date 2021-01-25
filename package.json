@@ -6,6 +6,9 @@
   "author": "Michael Bullington <michael@bullington.xyz>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "eslint": "^7.18.0",
+    "eslint-config-mbullington": "^1.0.1",
     "wasmc": "^2.2.0"
   }
 }
