@@ -1,0 +1,11 @@
+{
+  "name": "astro",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mbullington/astro.git",
+  "author": "Michael Bullington <michael@bullington.xyz>",
+  "license": "MIT",
+  "devDependencies": {
+    "wasmc": "^2.2.0"
+  }
+}

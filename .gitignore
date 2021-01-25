@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# JavaScript
+.log
+.DS_Store
+.jest-*
+node_modules
+packages/*/dist
