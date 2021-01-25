@@ -5,6 +5,9 @@
   "repository": "git@github.com:mbullington/astro.git",
   "author": "Michael Bullington <michael@bullington.xyz>",
   "license": "MIT",
+  "scripts": {
+    "build": "wasmc"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "eslint": "^7.18.0",

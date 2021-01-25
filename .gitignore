@@ -57,3 +57,4 @@ dkms.conf
 .jest-*
 node_modules
 packages/*/dist
+build
