@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "wasmc",
-    "test": "node << 'const astro = require(\"./dist/astro.js\")'",
+    "bench": "node bench/index.js",
     "clean": "rm -rf dist build"
   },
   "devDependencies": {

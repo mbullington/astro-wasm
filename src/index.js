@@ -11,14 +11,15 @@ export class Astro {
             const ring = coordinates[i]
 
             // Per ring.
-            const ringPtr = _create_linestring()
+            const ringPtr = _create_linear_ring()
             let j = 0
             for (; j < ring.length; j++) {
                 const lngLat = ring[j]
-                _push_linestring(ringPtr, lngLat[0], lngLat[1])
+                _push_linear_ring(ringPtr, lngLat[0], lngLat[1])
             }
 
             _push_polygon(polygonPtr, ringPtr)
+            _delete_linear_ring(ringPtr)
         }
 
         this.ptr = polygonPtr

@@ -1,36 +1,26 @@
 #pragma once
 
-#include <vector> 
-#include <emscripten/emscripten.h>
+#include <mapbox/geometry/point.hpp>
+#include <mapbox/geometry/polygon.hpp>
+
+#include "common.hpp"
 
 using namespace std;
 
-#define EXPORT EMSCRIPTEN_KEEPALIVE
+// Convenience types.
 
-// Structures.
-
-typedef struct LngLat_s {
-  double lng;
-  double lat;
-} LngLat;
-
-typedef vector<LngLat*> LineString;
-
-typedef vector<LineString*> Polygon;
-
-// LngLat type.
-
-LngLat *create_lnglat(double lng, double lat);
-void delete_lnglat(LngLat *lnglat);
+typedef mapbox::geometry::point<double> LngLat;
+typedef mapbox::geometry::linear_ring<double> LinearRing;
+typedef mapbox::geometry::polygon<double> Polygon;
 
 // LineString type.
 
-EXPORT LineString *create_linestring() asm("create_linestring");
-EXPORT void push_linestring(LineString *linestring, double lng, double lat) asm("push_linestring");
-EXPORT void delete_linestring(LineString *linestring) asm("delete_linestring");
+EXPORT LinearRing *create_linear_ring() asm("create_linear_ring");
+EXPORT void push_linear_ring(LinearRing *linear_ring, double lng, double lat) asm("push_linear_ring");
+EXPORT void delete_linear_ring(LinearRing *linear_ring) asm("delete_linear_ring");
 
 // Polygon type.
 
 EXPORT Polygon *create_polygon() asm("create_polygon");
-EXPORT void push_polygon(Polygon *polygon, LineString *ring) asm("push_polygon");
+EXPORT void push_polygon(Polygon *polygon, LinearRing *ring) asm("push_polygon");
 EXPORT void delete_polygon(Polygon *polygon) asm("delete_polygon");

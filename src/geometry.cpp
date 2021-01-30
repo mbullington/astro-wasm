@@ -1,36 +1,22 @@
-#include <vector> 
 #include <algorithm>
 
 #include "geometry.hpp"
 
 using namespace std; 
-
-// LngLat type.
-
-LngLat *create_lnglat(double lng, double lat) {
-    LngLat *lnglat = new LngLat;
-    lnglat->lng = lng;
-    lnglat->lat = lat;
-    return lnglat;
-}
-
-void delete_lnglat(LngLat *lnglat) {
-    delete lnglat;
-}
+using namespace mapbox::geometry;
 
 // LineString type.
 
-LineString *create_linestring() {
-    return new LineString();
+LinearRing *create_linear_ring() {
+    return new LinearRing();
 }
 
-void push_linestring(LineString *linestring, double lng, double lat) {
-    linestring->push_back(create_lnglat(lng, lat));
+void push_linear_ring(LinearRing *linear_ring, double lng, double lat) {
+    linear_ring->push_back(LngLat(lng, lat));
 }
 
-void delete_linestring(LineString *linestring) {
-    for_each(begin(*linestring), end(*linestring), delete_lnglat);
-    delete linestring;
+void delete_linear_ring(LinearRing *linear_ring) {
+    delete linear_ring;
 }
 
 // Polygon type.
@@ -39,11 +25,10 @@ Polygon *create_polygon() {
     return new Polygon();
 }
 
-void push_polygon(Polygon *polygon, LineString *ring) {
-    polygon->push_back(ring);
+void push_polygon(Polygon *polygon, LinearRing *linear_ring) {
+    polygon->push_back(*linear_ring);
 }
 
 void delete_polygon(Polygon *polygon) {
-    for_each(begin(*polygon), end(*polygon), delete_linestring);
     delete polygon;
 }

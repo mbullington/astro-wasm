@@ -2,7 +2,7 @@
 /* eslint-disable no-magic-numbers */
 const Benchmark = require('benchmark').Benchmark
 
-const { ready, Astro } = require('./dist/astro')
+const { ready, Astro } = require('../dist/astro')
 const turf = require('@turf/turf')
 
 const feature = {
@@ -73,6 +73,8 @@ const feature = {
 const astro = new Astro(feature)
 
 ready.then(() => {
+    console.log(`Sanity check: ${astro.area()} ${turf.area(feature)}`)
+
     new Benchmark.Suite()
         .add('astro.area', () => {
             astro.area()

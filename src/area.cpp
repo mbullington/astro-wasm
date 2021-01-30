@@ -1,18 +1,17 @@
-#include <emscripten/emscripten.h>
-
-#include <math.h>
+#include <cmath>
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <stddef.h>
 
 #include "geometry.hpp"
+#include "common.hpp"
+
+using namespace std;
 
 // For some reason Emscripten doesn't include M_PI.
 #define PI 3.14159265358979323846
 #define RADIUS 6378137
-
-#define EXPORT EMSCRIPTEN_KEEPALIVE
 
 EXPORT double polygon_area(Polygon *polygon) asm("polygon_area");
 
@@ -30,7 +29,7 @@ double rad(double deg);
  * @param {Array<Array<number>>} coords Ring Coordinates
  * @returns {number} The approximate signed geodesic area of the polygon in square meters.
  */
-double ring_area(LineString *ring) {
+double ring_area(LinearRing *ring) {
     size_t length = ring->size();
     if (length <= 2) {
         return 0;
@@ -61,12 +60,12 @@ double ring_area(LineString *ring) {
         upperIndex = i + 2;
       }
 
-      p1 = ring->at(lowerIndex);
-      p2 = ring->at(middleIndex);
-      p3 = ring->at(upperIndex);
+      p1 = &ring->at(lowerIndex);
+      p2 = &ring->at(middleIndex);
+      p3 = &ring->at(upperIndex);
 
       // total += p1.lng;
-      total += (rad(p3->lng) - rad(p1->lng)) * sin(rad(p2->lat));
+      total += (rad(p3->x) - rad(p1->x)) * sin(rad(p2->y));
     }
 
     return (total * RADIUS * RADIUS) / 2;
@@ -83,7 +82,7 @@ double polygon_area(Polygon *polygon) {
     for (; i < length; i++) {
         // The other rings are 'holes' so we subtract them.
         double modifier = i == 0 ? 1 : -1;
-        total += modifier * fabs(ring_area(polygon->at(i)));
+        total += modifier * abs(ring_area(&polygon->at(i)));
     }
 
     return total;
