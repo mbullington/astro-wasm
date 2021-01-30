@@ -6,10 +6,13 @@
   "author": "Michael Bullington <michael@bullington.xyz>",
   "license": "MIT",
   "scripts": {
-    "build": "wasmc"
+    "build": "wasmc",
+    "test": "node << 'const astro = require(\"./dist/astro.js\")'",
+    "clean": "rm -rf dist build"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@turf/turf": "^6.3.0",
     "eslint": "^7.18.0",
     "eslint-config-mbullington": "^1.0.1",
     "wasmc": "^2.2.0"

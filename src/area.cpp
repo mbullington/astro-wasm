@@ -1,21 +1,24 @@
-// https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html#embind
-#include <emscripten/bind.h>
+#include <emscripten/emscripten.h>
 
-#include <string>
 #include <math.h>
 
-using namespace emscripten;
+#include <stdint.h>
+#include <stdlib.h>
+#include <stddef.h>
 
-#define RADIUS 6378137;
+#include <stdio.h>
 
-struct LngLat {
-    float lng;
-    float lat;
-};
+#include "geometry.hpp"
 
-float rad(float deg) {
-    return deg * M_PI / 180;
-};
+// For some reason Emscripten doesn't include M_PI.
+#define PI 3.14159265358979323846
+#define RADIUS 6378137
+
+#define EXPORT EMSCRIPTEN_KEEPALIVE
+
+EXPORT double polygon_area(Polygon *polygon) asm("polygon_area");
+
+double rad(double deg);
 
 /**
  * Calculate the approximate area of the polygon were it projected onto the earth.
@@ -29,24 +32,28 @@ float rad(float deg) {
  * @param {Array<Array<number>>} coords Ring Coordinates
  * @returns {number} The approximate signed geodesic area of the polygon in square meters.
  */
-float ringArea(emscripten::val coordsJS) {
-    int coordsLength = coordsJS["length"].as<int>();
-    if (!coordsLength || coordsLength <= 2) {
+double ring_area(LineString *ring) {
+    size_t length = ring->size();
+    if (length <= 2) {
         return 0;
     }
 
-    LngLat p1, p2, p3;
-    int lowerIndex, middleIndex, upperIndex, i = 0;
+    LngLat *p1 = NULL;
+    LngLat *p2 = NULL;
+    LngLat *p3 = NULL;
 
-    for (i = 0; i < coordsLength; i++) {
-      if (i == coordsLength - 2) {
+    int lowerIndex = 0, middleIndex = 0, upperIndex = 0, i = 0;
+    double total = 0;
+
+    for (; i < length; i++) {
+      if (i == length - 2) {
         // i = N-2
-        lowerIndex = coordsLength - 2;
-        middleIndex = coordsLength - 1;
+        lowerIndex = length - 2;
+        middleIndex = length - 1;
         upperIndex = 0;
-      } else if (i == coordsLength - 1) {
+      } else if (i == length - 1) {
         // i = N-1
-        lowerIndex = coordsLength - 1;
+        lowerIndex = length - 1;
         middleIndex = 0;
         upperIndex = 1;
       } else {
@@ -56,44 +63,34 @@ float ringArea(emscripten::val coordsJS) {
         upperIndex = i + 2;
       }
 
-      p1 = coords[std::to_string(lowerIndex)].as<LngLat>();
-      p2 = coords[std::to_string(middleIndex)].as<LngLat>();
-      p3 = coords[std::to_string(upperIndex)].as<LngLat>();
+      p1 = ring->at(lowerIndex);
+      p2 = ring->at(middleIndex);
+      p3 = ring->at(upperIndex);
 
-      if (!p1 || !p2 || !p3) {
-          // TODO: Add real errors.
-          return -1000000;
-      }
-
-      total += (rad(p3[0]) - rad(p1[0])) * sin(rad(p2[1]));
+      // total += p1.lng;
+      total += (rad(p3->lng) - rad(p1->lng)) * sin(rad(p2->lat));
     }
 
-    return = (total * RADIUS * RADIUS) / 2;
+    return (total * RADIUS * RADIUS) / 2;
 };
 
-float geomArea(emscripten::val geomJS) {
-    int numRings = geomJS["length"].as<int>();
-    if (!numRings) {
+double polygon_area(Polygon *polygon) {
+    size_t length = polygon->size();
+    if (length < 1) {
         return 0;
     }
 
     int i = 0;
-    for (; i < numRings; i++) {
+    double total = 0;
+    for (; i < length; i++) {
         // The other rings are 'holes' so we subtract them.
-        float modifier = i == 0 ? 1 : -1;
-
-        emscripten::val coordsJS = geomJS[std::to_string(i)];
-        total += modifier * ringArea(coordsJS);
+        double modifier = i == 0 ? 1 : -1;
+        total += modifier * fabs(ring_area(polygon->at(i)));
     }
 
     return total;
 };
 
-EMSCRIPTEN_BINDINGS(astro_area) {
-    value_array<LngLat>("LngLat")
-        .element(&LngLat::lng)
-        .element(&LngLat::lat)
-        ;
-
-    function("geomArea", &geomArea);
-}
+double rad(double deg) {
+    return deg * PI / 180;
+};
