@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-#include <stdio.h>
-
 #include "geometry.hpp"
 
 // For some reason Emscripten doesn't include M_PI.
