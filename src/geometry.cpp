@@ -32,3 +32,17 @@ void push_polygon(Polygon *polygon, LinearRing *linear_ring) {
 void delete_polygon(Polygon *polygon) {
     delete polygon;
 }
+
+// MultiPolygon type.
+
+MultiPolygon *create_multi_polygon() {
+    return new MultiPolygon();
+}
+
+void push_multi_polygon(MultiPolygon *multi_polygon, Polygon *polygon) {
+    multi_polygon->push_back(*polygon);
+}
+
+void delete_multi_polygon(MultiPolygon *multi_polygon) {
+    delete multi_polygon;
+}
