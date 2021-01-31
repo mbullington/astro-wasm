@@ -1,6 +1,0 @@
-[submodule "geometry.hpp"]
-	path = geometry.hpp
-	url = https://github.com/mapbox/geometry.hpp.git
-[submodule "wagyu"]
-	path = wagyu
-	url = https://github.com/mapbox/wagyu.git

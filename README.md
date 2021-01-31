@@ -18,3 +18,8 @@ Robert. G. Chamberlain and William H. Duquette, "*Some Algorithms for Polygons o
 
 Alfred Melch, "*Performance comparison of simplification algorithms for polygons in the context of web applications*"
 * Universit¨at Augsburg, Augsburg, August 2019 https://mt.melch.pro/mt-polygon-simplification.pdf
+
+---
+
+Francisco Martinez, Antonio Jesus Rueda, Francisco Ramon Feito, "*A new algorithm for computing Boolean operations on polygons.* (2008, 2013)
+* https://www.sciencedirect.com/science/article/abs/pii/S0965997813000379
