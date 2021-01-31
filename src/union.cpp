@@ -10,15 +10,13 @@ using mapbox::geometry::wagyu::polygon_type;
 
 typedef wagyu<double> Clipper;
 
-EXPORT MultiPolygon *polygon_union(Polygon **polygon_arr, int length) asm("polygon_union");
+EXPORT MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) asm("polygon_union");
 
-MultiPolygon *polygon_union(Polygon **polygon_arr, int length) {
+MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
     Clipper clipper;
 
-    int i = 0;
-    for(; i < length; i++) {
-        clipper.add_polygon(*polygon_arr[i], polygon_type::polygon_type_subject);
-    }
+    clipper.add_polygon(*polygon1);
+    clipper.add_polygon(*polygon2);
 
     MultiPolygon *result = create_multi_polygon();
     clipper.execute(

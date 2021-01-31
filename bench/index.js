@@ -2,85 +2,40 @@
 /* eslint-disable no-magic-numbers */
 const Benchmark = require('benchmark').Benchmark
 
-const { ready, Astro } = require('../dist/astro')
+const { ready, getModule, Astro } = require('../dist/astro')
 const turf = require('@turf/turf')
 
-const feature = {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-        type: 'Polygon',
-        coordinates: [
-            [
-                [-94.630877761, 36.661062841],
-                [-94.231117249, 36.76879837],
-                [-94.161863743, 36.457916471],
-                [-94.043876287, 36.35676516],
-                [-93.872024993, 36.472355905],
-                [-93.825855989, 36.614543494],
-                [-93.610400636, 36.618660972],
-                [-93.510367793, 36.575416484],
-                [-93.562863233, 36.481250216],
-                [-93.881203172, 35.853045609],
-                [-95.013078511, 35.93900611],
-                [-96.39255158, 35.335326677],
-                [-95.649758389, 34.814269803],
-                [-93.562863233, 35.219823974],
-                [-92.678585625, 36.253394937],
-                [-92.820070042, 37.019726011],
-                [-94.164172007, 37.301613559],
-                [-95.543645076, 37.470241017],
-                [-94.800851885, 37.806356691],
-                [-93.492121025, 38.029588047],
-                [-94.341027529, 38.695207997],
-                [-92.254132373, 38.390892019],
-                [-91.475968078, 38.888192571],
-                [-91.228370347, 39.709338094],
-                [-93.45674992, 39.354691138],
-                [-94.164172007, 40.035094774],
-                [-94.588625259, 41.13639456],
-                [-94.093429798, 41.587703247],
-                [-92.430987895, 41.163028744],
-                [-94.02268759, 41.189652109],
-                [-93.810460964, 40.062171303],
-                [-91.475968078, 40.332344711],
-                [-91.617452495, 41.640592531],
-                [-94.588625259, 42.219510114],
-                [-95.088618056, 42.845644279],
-                [-93.956742717, 42.663841813],
-                [-96.878263369, 44.988507049],
-                [-99.914201666, 44.362539876],
-                [-100.545296375, 42.912955481],
-                [-97.821721341, 42.705363844],
-                [-95.45185735, 42.183338454],
-                [-94.810757422, 39.987531691],
-                [-95.376695092, 39.087362964],
-                [-95.695035031, 38.17555788],
-                [-96.614683744, 38.701953171],
-                [-98.560094482, 38.453086531],
-                [-98.94917663, 39.114812158],
-                [-96.225601596, 39.443368189],
-                [-96.119488283, 40.338932761],
-                [-99.515114299, 39.93330862],
-                [-99.51209016, 37.479500072],
-                [-96.399432978, 36.462188438],
-                [-94.630877761, 36.661062841],
-            ],
-        ],
-    },
-}
+const data = require('./data')
 
-const astro = new Astro(feature)
+const [astro, ...astroOthers] = data.features.map((feature) => new Astro(feature))
 
 ready.then(() => {
-    console.log(`Sanity check: ${astro.area()} ${turf.area(feature)}`)
+    console.log(getModule())
+    console.log(`Sanity check: ${astro.area()} ${turf.area(data.features[0])}`)
 
     new Benchmark.Suite()
         .add('astro.area', () => {
             astro.area()
         })
         .add('turf.area', () => {
-            turf.area(feature)
+            turf.area(data.features[0])
+        })
+        .on('cycle', function (event) {
+            console.log(String(event.target))
+        })
+        .on('complete', function () {
+            console.log('Fastest is ' + this.filter('fastest').map('name'))
+        })
+        .run()
+
+    console.log(`Sanity check: ${astro.union.apply(astro, astroOthers)}`)
+
+    new Benchmark.Suite()
+        .add('astro.union', () => {
+            astro.union(astroOthers[0])
+        })
+        .add('turf.union', () => {
+            turf.union(data.features[0], data.features[1])
         })
         .on('cycle', function (event) {
             console.log(String(event.target))

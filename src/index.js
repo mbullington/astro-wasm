@@ -1,5 +1,7 @@
 export const ready = Module.ready
 
+export const getModule = () => Module
+
 export class Astro {
     constructor(geojson) {
         // TODO: We assume this is a Polygon.
@@ -27,6 +29,10 @@ export class Astro {
 
     area() {
         return _polygon_area(this.ptr)
+    }
+
+    union(other) {
+        return _polygon_union(this.ptr, other.ptr)
     }
 
     destroy() {

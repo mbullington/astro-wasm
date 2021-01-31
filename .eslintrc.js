@@ -15,7 +15,12 @@ module.exports = Object.assign(config, {
         _create_polygon: 'readonly',
         _push_polygon: 'readonly',
         _delete_polygon: 'readonly',
+        _create_multi_polygon: 'readonly',
+        _push_multi_polygon: 'readonly',
+        _delete_multi_polygon: 'readonly',
         // area.cpp
         _polygon_area: 'readonly',
+        // union.cpp
+        _polygon_union: 'readonly',
     },
 })

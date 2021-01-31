@@ -11,7 +11,7 @@ module({
     name: 'astro',
     out: 'dist/astro.js',
     jsentry: 'src/index.js',
-    sources: ['src/geometry.cpp', 'src/area.cpp', 'src/union.cpp'],
+    sources: 'src/*.cpp',
     cflags: [...FLAGS, ...CFLAGS],
     lflags: FLAGS,
     // Node.js only options.
