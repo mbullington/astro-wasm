@@ -5,6 +5,8 @@
 
 #include "polygon.h"
 
+using namespace martinez;
+
 int findIntersection (const Segment& seg0, const Segment& seg1, Point& ip0, Point& ip1);
 
 /** Signed area of the triangle (p0, p1, p2) */

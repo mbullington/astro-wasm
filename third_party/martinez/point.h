@@ -10,7 +10,9 @@
 #include <vector>
 
 using namespace std;
+using namespace martinez;
 
+namespace martinez {
 class Point {
 
 public:
@@ -36,4 +38,5 @@ inline ostream& operator<< (ostream& o, const Point& p) { return o << "(" << p.x
 
 inline istream& operator>> (istream& i, Point& p) { return i >> p.x >> p.y; }
 
+}
 #endif

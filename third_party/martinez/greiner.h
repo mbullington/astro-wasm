@@ -10,6 +10,9 @@
 #include "martinez.h"
 
 using namespace std;
+using namespace martinez;
+
+namespace martinez {
 
 struct Vertex {
 	double x, y;
@@ -58,4 +61,5 @@ private:
 	int boolop (Martinez::BoolOpType op, GreinerContour& gc1, GreinerContour& gc2, Polygon& result);
 };
 
+}
 #endif

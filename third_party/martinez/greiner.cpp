@@ -7,6 +7,10 @@
 
 #include "utilities.h"
 
+using namespace martinez;
+
+namespace martinez {
+
 ostream& operator<< (ostream& o, const Vertex& v)
 {
 	return o << " Point: (" << v.x << "," << v.y << ") Intersect: " << v.intersect << " alpha: " << v.alpha;
@@ -298,4 +302,6 @@ int GreinerHormann::boolop (Martinez::BoolOpType op, GreinerContour& gc1, Greine
 		v = v->next;
 	} while (v != gc2.firstVertex ());
 	return nint;
+}
+
 }

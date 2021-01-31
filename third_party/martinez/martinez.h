@@ -19,6 +19,9 @@
 #include <set>
 
 using namespace std;
+using namespace martinez;
+
+namespace martinez {
 
 class Connector;
 
@@ -91,4 +94,5 @@ private:
 	SweepEvent *storeSweepEvent(const SweepEvent& e) { eventHolder.push_back (e); return &eventHolder.back (); }
 };
 
+}
 #endif

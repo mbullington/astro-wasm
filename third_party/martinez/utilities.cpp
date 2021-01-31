@@ -8,6 +8,8 @@
 #include "utilities.h"
 #include "segment.h"
 
+using namespace martinez;
+
 static int findIntersection (double u0, double u1, double v0, double v1, double w[2])
 {
 	if ((u1 < v0) || (u0 > v1))

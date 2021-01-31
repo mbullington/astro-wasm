@@ -7,6 +7,10 @@
 #define TIMER_RUNNING 1
 #define TIMER_PAUSED 2
 
+using namespace martinez;
+
+namespace martinez {
+
 /** @brief Cronmetro para medir tiempos de ejecucin de algoritmos */
 
 class Timer{
@@ -42,4 +46,5 @@ public:
     float timeUSecs () { return (float) sec * 1000000.0f + (float) usec; }
 };
 
+}
 #endif

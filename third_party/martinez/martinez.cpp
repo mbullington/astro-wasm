@@ -14,6 +14,10 @@
 #include <signal.h>
 #include <unistd.h>
 
+using namespace martinez;
+
+namespace martinez {
+
 // #define _DEBUG_ // uncomment this line if you want to debug the computation of the boolean operation
 
 // This function is intended for debugging purposes
@@ -347,4 +351,6 @@ void Martinez::divideSegment (SweepEvent* e, const Point& p)
 	e->other = r;
 	eq.push(l);
 	eq.push(r);
+}
+
 }

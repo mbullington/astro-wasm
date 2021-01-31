@@ -1,4 +1,7 @@
 #include "timer.h"
+using namespace martinez;
+
+namespace martinez {
 
 void Timer::updateTime ()
 {
@@ -45,4 +48,5 @@ void Timer::stop ()
       updateTime ();
     state = TIMER_STOPPED;
   }
+}
 }

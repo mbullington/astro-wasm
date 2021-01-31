@@ -6,7 +6,9 @@
 #include "segment.h"
 
 using namespace std;
+using namespace martinez;
 
+namespace martinez {
 class Contour {
 public:
 	typedef vector<Point>::iterator iterator;
@@ -85,4 +87,5 @@ private:
 
 ostream& operator<< (ostream& o, Polygon& p);
 istream& operator>> (istream& i, Polygon& p);
+}
 #endif

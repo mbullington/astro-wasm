@@ -13,6 +13,9 @@
 #include "martinez.h"
 #include <list>
 
+using namespace martinez;
+
+namespace martinez {
 class PointChain {
 public:
 	typedef list<Point>::iterator iterator;
@@ -46,6 +49,8 @@ private:
 	list<PointChain> openPolygons;
 	list<PointChain> closedPolygons;
 };
+
+}
 
 
 #endif

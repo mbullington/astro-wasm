@@ -7,6 +7,9 @@
 
 #include "point.h"
 
+using namespace martinez;
+
+namespace martinez {
 class Polygon;
 
 class Segment {
@@ -37,5 +40,5 @@ public:
 };
 
 inline ostream& operator<< (ostream& o, const Segment& p) { return o << p.begin () << "-" << p.end (); }
-
+}
 #endif

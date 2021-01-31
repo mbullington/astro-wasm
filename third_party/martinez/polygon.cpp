@@ -6,6 +6,10 @@
 #include <cstdlib>
 #include <algorithm>
 
+using namespace martinez;
+
+namespace martinez {
+
 void Contour::boundingbox (Point& min, Point& max)
 {
 	min.x = min.y = numeric_limits<double>::max ();
@@ -292,4 +296,5 @@ void Polygon::computeHoles ()
 		getline (cin, st);
 		#endif
 	}
+}
 }

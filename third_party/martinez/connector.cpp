@@ -9,6 +9,10 @@
 #include "connector.h"
 #include <algorithm>
 
+using namespace martinez;
+
+namespace martinez {
+
 void PointChain::init (const Segment& s)
 {
 	l.push_back (s.begin ());
@@ -107,4 +111,6 @@ void Connector::toPolygon (Polygon& p)
 		for (PointChain::iterator it2 = it->begin (); it2 != it->end (); it2++)
 			contour.add (*it2);
 	}
+}
+
 }
