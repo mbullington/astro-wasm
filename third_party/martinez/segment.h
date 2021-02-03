@@ -38,7 +38,5 @@ public:
 	/** Change the segment orientation */
 	Segment& changeOrientation () { Point tmp = p1; p1 = p2; p2 = tmp; return *this; }
 };
-
-inline ostream& operator<< (ostream& o, const Segment& p) { return o << p.begin () << "-" << p.end (); }
 }
 #endif

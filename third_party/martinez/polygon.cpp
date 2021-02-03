@@ -4,6 +4,7 @@
 #include <set>
 #include <fstream>
 #include <cstdlib>
+#include <iostream>
 #include <algorithm>
 
 using namespace martinez;
@@ -159,11 +160,11 @@ struct SE {
 	bool above (const Point& x) const { return !below (x); }
 };
 
-ostream& operator<< (ostream& o, SE& e)
-{
-	return o << " Point: " << e.p << " Other point: " << e.other->p << (e.left ? " (Left) " : " (Right) ")
-            << (e.inOut ? " (In-Out) " : " (Out-In) ") << " Polygon: " << e.pl;
-}
+// ostream& operator<< (ostream& o, SE& e)
+// {
+// 	return o << " Point: " << e.p << " Other point: " << e.other->p << (e.left ? " (Left) " : " (Right) ")
+//             << (e.inOut ? " (In-Out) " : " (Out-In) ") << " Polygon: " << e.pl;
+// }
 
 struct SEComp : public binary_function<SE*, SE*, bool> {
 	bool operator() (SE* e1, SE* e2) {

@@ -17,26 +17,14 @@ MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
     int i = 0;
     for (; i < polygon1->size(); i++) {
         LinearRing ring = polygon1->at(i);
-        martinez::Contour *contour = &subj.pushbackContour();
-
-        int j = 0;
-        for (; j < ring.size(); j++) {
-            LngLat lngLat = ring.at(j);
-            contour->add(martinez::Point(lngLat.x, lngLat.y));
-        }
+        martinez::Contour *contour = &subj.pushbackContour(ring);
     }
 
     // Add contours for polygon2.
     i = 0;
     for (; i < polygon2->size(); i++) {
         LinearRing ring = polygon2->at(i);
-        martinez::Contour *contour = &clip.pushbackContour();
-
-        int j = 0;
-        for (; j < ring.size(); j++) {
-            LngLat lngLat = ring.at(j);
-            contour->add(martinez::Point(lngLat.x, lngLat.y));
-        }
+        martinez::Contour *contour = &clip.pushbackContour(ring);
     }
 
     martinez::Polygon *result = new martinez::Polygon();

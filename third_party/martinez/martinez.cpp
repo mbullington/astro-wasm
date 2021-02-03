@@ -21,13 +21,13 @@ namespace martinez {
 // #define _DEBUG_ // uncomment this line if you want to debug the computation of the boolean operation
 
 // This function is intended for debugging purposes
-void Martinez::print (SweepEvent& e)
-{
-	const char* namesEventTypes[] = { " (NORMAL) ", " (NON_CONTRIBUTING) ", " (SAME_TRANSITION) ", " (DIFFERENT_TRANSITION) " };
-	cout << " Point: " << e.p << " Other point: " << e.other->p << (e.left ? " (Left) " : " (Right) ")
-         << (e.inside ? " (Inside) " : " (Outside) ") <<  (e.inOut ? " (In-Out) " : " (Out-In) ") << "Type: "
-         << namesEventTypes[e.type] << " Polygon: " << (e.pl == SUBJECT ? " (SUBJECT)" : " (CLIPPING)") << endl;
-}
+// void Martinez::print (SweepEvent& e)
+// {
+// 	const char* namesEventTypes[] = { " (NORMAL) ", " (NON_CONTRIBUTING) ", " (SAME_TRANSITION) ", " (DIFFERENT_TRANSITION) " };
+// 	cout << " Point: " << e.p << " Other point: " << e.other->p << (e.left ? " (Left) " : " (Right) ")
+//          << (e.inside ? " (Inside) " : " (Outside) ") <<  (e.inOut ? " (In-Out) " : " (Out-In) ") << "Type: "
+//          << namesEventTypes[e.type] << " Polygon: " << (e.pl == SUBJECT ? " (SUBJECT)" : " (CLIPPING)") << endl;
+// }
 
 // Compare two sweep events
 // Return true means that e1 is placed at the event queue after e2, i.e,, e1 is processed by the algorithm after e2

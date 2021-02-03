@@ -16,6 +16,8 @@ public:
 	
 	Contour () : points (), holes (), _external (true), _precomputedCC (false) {}
 
+	Contour (vector<Point> pts) : points (pts), holes (), _external (true), _precomputedCC (false) {}
+
 	/** Get the p-th vertex of the external contour */
 	Point& vertex (unsigned p) { return points[p]; }
 	Segment segment (unsigned p) const { return (p == nvertices () - 1) ? Segment (points.back (), points.front ()) : Segment (points[p], points[p+1]); }
@@ -74,6 +76,8 @@ public:
 	void move (double x, double y);
 
 	Contour& pushbackContour () { contours.push_back (Contour ()); return contours.back (); }
+	Contour& pushbackContour (vector<Point> &pts) { contours.push_back (Contour (pts)); return contours.back (); }
+
 	void deletebackContour () { contours.pop_back (); }
 	void erase (iterator i) { contours.erase (i); }
 	void clear () { contours.clear (); }

@@ -57,10 +57,10 @@ int martinez::findIntersection (const Segment& seg0, const Segment& seg1, Point&
 		// intersection of lines is a point an each segment
 		pi0.x = p0.x + s * d0.x;
 		pi0.y = p0.y + s * d0.y;
-		if (pi0.dist (seg0.begin ()) < 0.00000001) pi0 = seg0.begin ();
-		if (pi0.dist (seg0.end ()) < 0.00000001) pi0 = seg0.end ();
-		if (pi0.dist (seg1.begin ()) < 0.00000001) pi0 = seg1.begin ();
-		if (pi0.dist (seg1.end ()) < 0.00000001) pi0 = seg1.end ();
+		if (point_dist (pi0, seg0.begin ()) < 0.00000001) pi0 = seg0.begin ();
+		if (point_dist (pi0, seg0.end ()) < 0.00000001) pi0 = seg0.end ();
+		if (point_dist (pi0, seg1.begin ()) < 0.00000001) pi0 = seg1.begin ();
+		if (point_dist (pi0, seg1.end ()) < 0.00000001) pi0 = seg1.end ();
 		return 1;
 	}
 
@@ -84,10 +84,10 @@ int martinez::findIntersection (const Segment& seg0, const Segment& seg1, Point&
 	if (imax > 0) {
 		pi0.x = p0.x + w[0] * d0.x;
 		pi0.y = p0.y + w[0] * d0.y;
-		if (pi0.dist (seg0.begin ()) < 0.00000001) pi0 = seg0.begin ();
-		if (pi0.dist (seg0.end ()) < 0.00000001) pi0 = seg0.end ();
-		if (pi0.dist (seg1.begin ()) < 0.00000001) pi0 = seg1.begin ();
-		if (pi0.dist (seg1.end ()) < 0.00000001) pi0 = seg1.end ();
+		if (point_dist (pi0, seg0.begin ()) < 0.00000001) pi0 = seg0.begin ();
+		if (point_dist (pi0, seg0.end ()) < 0.00000001) pi0 = seg0.end ();
+		if (point_dist (pi0, seg1.begin ()) < 0.00000001) pi0 = seg1.begin ();
+		if (point_dist (pi0, seg1.end ()) < 0.00000001) pi0 = seg1.end ();
 		if (imax > 1) {
 			pi1.x = p0.x + w[1] * d0.x;
 			pi1.y = p0.y + w[1] * d0.y;
