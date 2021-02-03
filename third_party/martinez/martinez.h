@@ -19,9 +19,9 @@
 #include <set>
 
 using namespace std;
-using namespace martinez;
 
 namespace martinez {
+	using namespace martinez;
 
 class Connector;
 

@@ -7,9 +7,9 @@
 
 #include "point.h"
 
-using namespace martinez;
-
 namespace martinez {
+	using namespace martinez;
+
 class Polygon;
 
 class Segment {

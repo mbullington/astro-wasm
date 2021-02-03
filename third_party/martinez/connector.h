@@ -13,9 +13,8 @@
 #include "martinez.h"
 #include <list>
 
-using namespace martinez;
-
 namespace martinez {
+	using namespace martinez;
 class PointChain {
 public:
 	typedef list<Point>::iterator iterator;

@@ -10,7 +10,7 @@
 
 using namespace martinez;
 
-static int findIntersection (double u0, double u1, double v0, double v1, double w[2])
+static int findIntersectionInter (double u0, double u1, double v0, double v1, double w[2])
 {
 	if ((u1 < v0) || (u0 > v1))
 		return 0;
@@ -31,7 +31,7 @@ static int findIntersection (double u0, double u1, double v0, double v1, double 
 	}
 }
 
-int findIntersection (const Segment& seg0, const Segment& seg1, Point& pi0, Point& pi1)
+int martinez::findIntersection (const Segment& seg0, const Segment& seg1, Point& pi0, Point& pi1)
 {
 	const Point& p0 = seg0.begin ();
 	Point d0 (seg0.end ().x - p0.x, seg0.end ().y - p0.y);
@@ -79,7 +79,7 @@ int findIntersection (const Segment& seg0, const Segment& seg1, Point& pi0, Poin
 	double smin = min (s0, s1);
 	double smax = max (s0, s1);
 	double w[2];
-	int imax = findIntersection (0.0, 1.0, smin, smax, w);
+	int imax = findIntersectionInter (0.0, 1.0, smin, smax, w);
 
 	if (imax > 0) {
 		pi0.x = p0.x + w[0] * d0.x;

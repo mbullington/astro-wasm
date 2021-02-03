@@ -1,30 +1,49 @@
 
-#include <mapbox/geometry/wagyu/wagyu.hpp>
+#include "../third_party/martinez/polygon.h"
+#include "../third_party/martinez/martinez.h"
 
 #include "common.hpp"
 #include "geometry.hpp"
 
 using namespace std;
-using mapbox::geometry::wagyu::wagyu;
-using mapbox::geometry::wagyu::polygon_type;
-
-typedef wagyu<double> Clipper;
 
 EXPORT MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) asm("polygon_union");
 
 MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
-    Clipper clipper;
+    martinez::Polygon subj;
+    martinez::Polygon clip;
 
-    clipper.add_polygon(*polygon1);
-    clipper.add_polygon(*polygon2);
+    // Add contours for polygon1.
+    int i = 0;
+    for (; i < polygon1->size(); i++) {
+        LinearRing ring = polygon1->at(i);
+        martinez::Contour *contour = &subj.pushbackContour();
 
-    MultiPolygon *result = create_multi_polygon();
-    clipper.execute(
-        mapbox::geometry::wagyu::clip_type_union,
-        *result,
-        mapbox::geometry::wagyu::fill_type_even_odd, 
-        mapbox::geometry::wagyu::fill_type_even_odd
-    );
+        int j = 0;
+        for (; j < ring.size(); j++) {
+            LngLat lngLat = ring.at(j);
+            contour->add(martinez::Point(lngLat.x, lngLat.y));
+        }
+    }
 
-    return result;
+    // Add contours for polygon2.
+    i = 0;
+    for (; i < polygon2->size(); i++) {
+        LinearRing ring = polygon2->at(i);
+        martinez::Contour *contour = &clip.pushbackContour();
+
+        int j = 0;
+        for (; j < ring.size(); j++) {
+            LngLat lngLat = ring.at(j);
+            contour->add(martinez::Point(lngLat.x, lngLat.y));
+        }
+    }
+
+    martinez::Polygon *result = new martinez::Polygon();
+
+    martinez::Martinez mr (subj, clip);
+    mr.compute(martinez::Martinez::UNION, *result);
+
+    // TODO: fix this
+    return ((MultiPolygon *) result);
 }

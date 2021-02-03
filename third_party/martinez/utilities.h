@@ -5,7 +5,9 @@
 
 #include "polygon.h"
 
-using namespace martinez;
+namespace martinez {
+		using namespace martinez;
+
 
 int findIntersection (const Segment& seg0, const Segment& seg1, Point& ip0, Point& ip1);
 
@@ -32,6 +34,8 @@ inline bool pointInTriangle (const Segment& s, Point& o, Point& p)
 {
 	int x = sign (s.begin (), s.end (), p);
 	return ((x == sign (s.end (), o, p)) && (x == sign (o, s.begin (), p)));
+}
+
 }
 
 #endif

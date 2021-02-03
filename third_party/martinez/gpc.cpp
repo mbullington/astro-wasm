@@ -42,6 +42,7 @@ Copyright: (C) Advanced Interfaces Group,
 #include <float.h>
 #include <math.h>
 
+using namespace martinez;
 
 /*
 ===========================================================================
@@ -1015,7 +1016,7 @@ static void minimax_test(gpc_polygon *subj, gpc_polygon *clip, gpc_op op)
 ===========================================================================
 */
 
-void gpc_free_polygon(gpc_polygon *p)
+void martinez::gpc_free_polygon(gpc_polygon *p)
 {
   int c;
 
@@ -1027,7 +1028,7 @@ void gpc_free_polygon(gpc_polygon *p)
 }
 
 
-void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
+void martinez::gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
 {
   int c, v;
 

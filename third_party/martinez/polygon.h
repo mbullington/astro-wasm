@@ -6,9 +6,10 @@
 #include "segment.h"
 
 using namespace std;
-using namespace martinez;
 
 namespace martinez {
+	using namespace martinez;
+
 class Contour {
 public:
 	typedef vector<Point>::iterator iterator;

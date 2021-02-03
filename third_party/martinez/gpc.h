@@ -36,6 +36,8 @@ Copyright: (C) Advanced Interfaces Group,
 #include <stdio.h>
 #include "polygon.h" // Francisco Martínez
 
+namespace martinez {
+  	using namespace martinez;
 
 /*
 ===========================================================================
@@ -134,3 +136,4 @@ void gpc_set_polygon (Polygon& p, gpc_polygon *polygon); // Paco
                            End of file: gpc.h
 ===========================================================================
 */
+}

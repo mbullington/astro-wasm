@@ -7,9 +7,8 @@
 #define TIMER_RUNNING 1
 #define TIMER_PAUSED 2
 
-using namespace martinez;
-
 namespace martinez {
+  	using namespace martinez;
 
 /** @brief Cronmetro para medir tiempos de ejecucin de algoritmos */
 

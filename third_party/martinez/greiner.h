@@ -10,9 +10,9 @@
 #include "martinez.h"
 
 using namespace std;
-using namespace martinez;
 
 namespace martinez {
+	using namespace martinez;
 
 struct Vertex {
 	double x, y;
