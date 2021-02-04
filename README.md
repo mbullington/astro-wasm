@@ -1,4 +1,4 @@
-# astro
+# astro-wasm
 
 Experimental geospatial library modeled after [Turf.js](https://github.com/Turfjs/turf) written in C/WASM.
 
@@ -9,7 +9,13 @@ This project is part of my PSU Schreyer Undergraduate Thesis under [Danfeng Zhan
 Right now I'm implementing different algorithms and assessing their performance vs. Turf.js:
 
 - [x] `area`
-- [ ] `union` — still working on conversion with martinez C++ library
+- [ ] `union` - Implemented but needs unit tests for correctness.
+- [ ] `intersect` - Implemented but needs unit tests for correctness.
+- [ ] `difference` - Implemented but needs unit tests for correctness.
+
+So far with small-`n` polygons, TURF.js is beating the WASM implementation by consistently ~1,000 ops per second. Next steps here are to build out the bench to test different `n` complexity of polygons and average them.
+
+Also looking into WASM performance tools to avoid optimizing in the wrong places.
 
 ## Sources
 
