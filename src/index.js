@@ -3,6 +3,13 @@ export const ready = Module.ready
 export const getModule = () => Module
 
 export class Astro {
+    // Create from internal pointer.
+    static fromPtr(ptr) {
+        const newObj = Object.create(Astro.prototype)
+        newObj.ptr = ptr
+        return newObj
+    }
+
     constructor(geojson) {
         // TODO: We assume this is a Polygon.
         const coordinates = geojson.geometry.coordinates
@@ -27,20 +34,24 @@ export class Astro {
         this.ptr = polygonPtr
     }
 
+    // Cleanup pointers.
+    destroy() {
+        _delete_polygon(this.ptr)
+    }
+
     area() {
         return _polygon_area(this.ptr)
     }
 
     union(other) {
-        const ptr = _polygon_union(this.ptr, other.ptr)
-
-        const newObj = Object.create(Astro.prototype)
-        newObj.ptr = ptr
-        return newObj
+        return Astro.fromPtr(_polygon_union(this.ptr, other.ptr))
     }
 
-    destroy() {
-        // Cleanup.
-        _delete_polygon(this.ptr)
+    difference(other) {
+        return Astro.fromPtr(_polygon_difference(this.ptr, other.ptr))
+    }
+
+    intersect(other) {
+        return Astro.fromPtr(_polygon_intersect(this.ptr, other.ptr))
     }
 }

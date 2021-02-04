@@ -8,8 +8,10 @@
 using namespace std;
 
 EXPORT Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) asm("polygon_union");
+EXPORT Polygon *polygon_difference(Polygon *polygon1, Polygon *polygon2) asm("polygon_difference");
+EXPORT Polygon *polygon_intersect(Polygon *polygon1, Polygon *polygon2) asm("polygon_intersect");
 
-Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
+Polygon *polygon_clipping(Polygon *polygon1, Polygon *polygon2, martinez::Martinez::BoolOpType op) {
     martinez::Polygon subj;
     martinez::Polygon clip;
 
@@ -30,7 +32,7 @@ Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
     martinez::Polygon mrResult;
 
     martinez::Martinez mr (subj, clip);
-    mr.compute(martinez::Martinez::UNION, mrResult);
+    mr.compute(op, mrResult);
 
     Polygon *result = new Polygon();
     // Add coutours back.
@@ -39,4 +41,16 @@ Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
     }
 
     return result;
+}
+
+Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
+    return polygon_clipping(polygon1, polygon2, martinez::Martinez::UNION);
+}
+
+Polygon *polygon_difference(Polygon *polygon1, Polygon *polygon2) {
+    return polygon_clipping(polygon1, polygon2, martinez::Martinez::DIFFERENCE);
+}
+
+Polygon *polygon_intersect(Polygon *polygon1, Polygon *polygon2) {
+    return polygon_clipping(polygon1, polygon2, martinez::Martinez::INTERSECTION);
 }
