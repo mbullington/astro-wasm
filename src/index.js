@@ -32,7 +32,11 @@ export class Astro {
     }
 
     union(other) {
-        return _polygon_union(this.ptr, other.ptr)
+        const ptr = _polygon_union(this.ptr, other.ptr)
+
+        const newObj = Object.create(Astro.prototype)
+        newObj.ptr = ptr
+        return newObj
     }
 
     destroy() {

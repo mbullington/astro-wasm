@@ -14,6 +14,9 @@ class Contour {
 public:
 	typedef vector<Point>::iterator iterator;
 	
+	/** Set of points conforming the external contour */
+	vector<Point> points;
+
 	Contour () : points (), holes (), _external (true), _precomputedCC (false) {}
 
 	Contour (vector<Point> pts) : points (pts), holes (), _external (true), _precomputedCC (false) {}
@@ -47,8 +50,6 @@ public:
 	void setExternal (bool e) { _external = e; }
 
 	private:
-	/** Set of points conforming the external contour */
-	vector<Point> points;
 	/** Holes of the contour. They are stored as the indexes of the holes in a polygon class */
 	vector<int> holes;
 	bool _external; // is the contour an external contour? (i.e., is it not a hole?)

@@ -7,9 +7,9 @@
 
 using namespace std;
 
-EXPORT MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) asm("polygon_union");
+EXPORT Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) asm("polygon_union");
 
-MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
+Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
     martinez::Polygon subj;
     martinez::Polygon clip;
 
@@ -27,11 +27,16 @@ MultiPolygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
         martinez::Contour *contour = &clip.pushbackContour(ring);
     }
 
-    martinez::Polygon *result = new martinez::Polygon();
+    martinez::Polygon mrResult;
 
     martinez::Martinez mr (subj, clip);
-    mr.compute(martinez::Martinez::UNION, *result);
+    mr.compute(martinez::Martinez::UNION, mrResult);
 
-    // TODO: fix this
-    return ((MultiPolygon *) result);
+    Polygon *result = new Polygon();
+    // Add coutours back.
+    for (auto it = mrResult.begin(); it != mrResult.end(); ++it) {
+        result->push_back(it->points);
+    }
+
+    return result;
 }
