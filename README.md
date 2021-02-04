@@ -4,6 +4,8 @@ Experimental geospatial library modeled after [Turf.js](https://github.com/Turfj
 
 This project is part of my PSU Schreyer Undergraduate Thesis under [Danfeng Zhang](http://www.cse.psu.edu/~dbz5017/), which looks to benchmark and document the performance characteristics of a WASM implemention vs. JS along with GeoJSON decoding/reencoding between JS-WASM.
 
+**Note:** Not ready for any use.
+
 ## Progress
 
 Right now I'm implementing different algorithms and assessing their performance vs. Turf.js:
