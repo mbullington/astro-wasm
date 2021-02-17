@@ -58,3 +58,4 @@ dkms.conf
 node_modules
 packages/*/dist
 build
+bench/run
