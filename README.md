@@ -38,4 +38,11 @@ Alfred Melch, "*Performance comparison of simplification algorithms for polygons
 
 Francisco Martinez, Antonio Jesus Rueda, Francisco Ramon Feito, "*A new algorithm for computing Boolean operations on polygons.* (2008, 2013)
 * https://www.sciencedirect.com/science/article/abs/pii/S0965997813000379
-* The C++ code from this paper (originally under public domain) has been modified under `third_party/martinez`. Modifications are ergonomic and do not change the algorithm.
+* The C++ code from this paper (originally under public domain) has been modified under `third_party/martinez`.
+
+I implemented correctness fixes from [w8r/martinez](https://github.com/w8r/martinez). This are the same changes that were used in TURF.js.
+
+Specifically, I changed `third_party/martinez` to reflect these changes:
+- https://github.com/w8r/martinez/blob/master/src/divide_segment.js 
+
+I also made multiple ergonomic changes to the source code.

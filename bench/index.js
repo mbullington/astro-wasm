@@ -49,6 +49,27 @@ function benchmarkUnion(a, b) {
     })
 }
 
+function benchmarkIntersect(a, b) {
+    return new Promise((resolve, reject) => {
+        const astroA = new Astro(a)
+        const astroB = new Astro(b)
+
+        const opsPerSecond = {}
+
+        new Benchmark.Suite()
+            .add('astro.intersect', () => astroA.intersect(astroB))
+            .add('turf.intersect', () => turf.intersect(a, b))
+            .on('cycle', (event) => {
+                const { name, hz } = event.target
+
+                opsPerSecond[name] = hz
+            })
+            .on('complete', () => resolve(opsPerSecond))
+            .on('error', (e) => reject(e))
+            .run()
+    })
+}
+
 ready.then(async () => {
     // Make directory ahead of time.
     try {
@@ -59,7 +80,7 @@ ready.then(async () => {
 
     // Create polygons of n-size.
     const polygons = []
-    for (let i = 3; i < 200; i += 5) {
+    for (let i = 3; i < 202; i += 10) {
         polygons.push(generatePolygonN(i))
     }
 
@@ -74,9 +95,18 @@ ready.then(async () => {
     // Benchmark union.
     for (let i = 0; i < polygons.length - 1; i++) {
         const a = polygons[i]
-        const b = polygons[i + 1]
+        const b = turf.transformTranslate(polygons[i + 1], 20, 90)
         const result = await benchmarkUnion(a, b)
 
         fs.writeFileSync(path.join(__dirname, 'run', `union-${i}.json`), JSON.stringify(result))
+    }
+
+    // Benchmark intersect.
+    for (let i = 0; i < polygons.length - 1; i++) {
+        const a = polygons[i]
+        const b = turf.transformTranslate(polygons[i + 1], 20, 90)
+        const result = await benchmarkIntersect(a, b)
+
+        fs.writeFileSync(path.join(__dirname, 'run', `intersect-${i}.json`), JSON.stringify(result))
     }
 })

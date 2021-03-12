@@ -332,6 +332,7 @@ void Martinez::possibleIntersection (SweepEvent* e1, SweepEvent* e2)
 	divideSegment (sortedEvents[3]->other, sortedEvents[2]->p);
 }
 
+// https://github.com/w8r/martinez/blob/master/src/divide_segment.js 
 void Martinez::divideSegment (SweepEvent* e, const Point& p)
 {
 	// "Right event" of the "left line segment" resulting from dividing e (the line segment associated to e)
@@ -339,13 +340,8 @@ void Martinez::divideSegment (SweepEvent* e, const Point& p)
 	// "Left event" of the "right line segment" resulting from dividing e (the line segment associated to e)
 	SweepEvent *l = storeSweepEvent(SweepEvent(p, true, e->pl, e->other, e->other->type));
 	if (sec (l, e->other)) { // avoid a rounding error. The left event would be processed after the right event
-		cout << "Oops" << endl;
 		e->other->left = true;
 		l->left = false;
-	}
-	if (sec (e, r)) { // avoid a rounding error. The left event would be processed after the right event
-		cout << "Oops2" << endl;
-//		cout << *e << endl;
 	}
 	e->other->other = l;
 	e->other = r;
