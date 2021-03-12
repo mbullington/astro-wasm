@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Astro.js test</title>
+        <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+        <style>
+            button {
+                display: block;
+                margin-bottom: 20px;
+                font-size: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Open your console!</h1>
+        <h3><code>astro</code> and <code>turf</code> should be available globally.</h3>
+        <h3>There's also <code>window.astro1</code> and <code>window.astro2</code> for ease of use.</h3>
+        <button id="runMe">Button that fires window.runMe</button>
+        <button id="area">Button that fires astro1.area()</button>
+        <button id="union">Button that fires astro1.union(astro2)</button>
+        
+        <script src="/dist/astro.js"></script>
+        <script src="https://unpkg.com/@turf/turf@6.3.0/turf.min.js"></script>
+        <script>
+            window.onload = () => {
+                function click(id, cb) {
+                    const button = document.querySelector(id)
+                    button.addEventListener("click", cb)
+                }
+                
+                click("#runMe", () => {
+                    window.runMe()
+                })
+
+                click("#area", () => {
+                    console.log(window.astro1.area())
+                })
+
+                click("#union", () => {
+                    console.profile()
+
+                    // Run a crazy amount of times.
+                    for (let i = 0; i < 100; i++) {
+                        window.dontOptimize = window.astro1.union(window.astro2).ptr
+                    }
+
+                    console.profileEnd()
+                })
+
+                window.astro1 = new astro.Astro(turf.circle([0, 0], 400, { steps: 50 }))
+                window.astro2 = new astro.Astro(turf.transformTranslate(turf.circle([0, 0], 400, { steps: 50 }), 200, 90))
+            };
+        </script>
+    </body>
+</html>

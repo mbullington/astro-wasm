@@ -8,7 +8,8 @@
   "scripts": {
     "build": "wasmc",
     "bench": "node bench/index.js",
-    "clean": "rm -rf dist build"
+    "clean": "rm -rf dist build bench/run",
+    "serve": "serve"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -16,6 +17,7 @@
     "benchmark": "^2.1.4",
     "eslint": "^7.18.0",
     "eslint-config-mbullington": "^1.0.1",
+    "serve": "^11.3.2",
     "wasmc": "^2.2.0"
   }
 }
