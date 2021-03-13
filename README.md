@@ -44,5 +44,6 @@ I implemented correctness fixes from [w8r/martinez](https://github.com/w8r/marti
 
 Specifically, I changed `third_party/martinez` to reflect these changes:
 - https://github.com/w8r/martinez/blob/master/src/divide_segment.js 
+- https://github.com/w8r/martinez/commit/196dafc3d84892a922f8370d67109c2ebd393309
 
 I also made multiple ergonomic changes to the source code.

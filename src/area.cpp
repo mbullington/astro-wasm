@@ -60,9 +60,9 @@ double ring_area(LinearRing *ring) {
         upperIndex = i + 2;
       }
 
-      p1 = &ring->at(lowerIndex);
-      p2 = &ring->at(middleIndex);
-      p3 = &ring->at(upperIndex);
+      p1 = &(*ring)[lowerIndex];
+      p2 = &(*ring)[middleIndex];
+      p3 = &(*ring)[upperIndex];
 
       // total += p1.lng;
       total += (rad(p3->x) - rad(p1->x)) * sin(rad(p2->y));
@@ -82,7 +82,7 @@ double polygon_area(Polygon *polygon) {
     for (; i < length; i++) {
         // The other rings are 'holes' so we subtract them.
         double modifier = i == 0 ? 1 : -1;
-        total += modifier * abs(ring_area(&polygon->at(i)));
+        total += modifier * abs(ring_area(&(*polygon)[i]));
     }
 
     return total;

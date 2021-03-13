@@ -6,18 +6,19 @@
   "author": "Michael Bullington <michael@bullington.xyz>",
   "license": "MIT",
   "scripts": {
-    "build": "wasmc",
+    "build": "wasmc -image mbullington/emsdk",
     "bench": "node bench/index.js",
     "clean": "rm -rf dist build bench/run",
     "serve": "serve"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
+    "@babel/core": "^7.13.10",
+    "@babel/node": "^7.13.10",
     "@turf/turf": "^6.3.0",
     "benchmark": "^2.1.4",
     "eslint": "^7.18.0",
     "eslint-config-mbullington": "^1.0.1",
     "serve": "^11.3.2",
-    "wasmc": "^2.2.0"
+    "wasmc": "https://github.com/mbullington/js-wasmc.git"
   }
 }

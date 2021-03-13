@@ -16,15 +16,19 @@ Polygon *polygon_clipping(Polygon *polygon1, Polygon *polygon2, martinez::Martin
     martinez::Polygon clip;
 
     // Add contours for polygon1.
+    size_t size1 = polygon1->size();
+    subj.reserve(size1);
     int i = 0;
-    for (; i < polygon1->size(); i++) {
+    for (; i < size1; i++) {
         LinearRing ring = polygon1->at(i);
         martinez::Contour *contour = &subj.pushbackContour(ring);
     }
 
     // Add contours for polygon2.
+    size_t size2 = polygon2->size();
+    clip.reserve(size2);
     i = 0;
-    for (; i < polygon2->size(); i++) {
+    for (; i < size2; i++) {
         LinearRing ring = polygon2->at(i);
         martinez::Contour *contour = &clip.pushbackContour(ring);
     }
@@ -36,6 +40,7 @@ Polygon *polygon_clipping(Polygon *polygon1, Polygon *polygon2, martinez::Martin
 
     Polygon *result = new Polygon();
     // Add coutours back.
+    result->reserve(mrResult.ncontours());
     for (auto it = mrResult.begin(); it != mrResult.end(); ++it) {
         result->push_back(it->points);
     }

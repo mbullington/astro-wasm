@@ -32,16 +32,23 @@ namespace martinez {
 // Compare two sweep events
 // Return true means that e1 is placed at the event queue after e2, i.e,, e1 is processed by the algorithm after e2
 bool Martinez::SweepEventComp::operator() (SweepEvent* e1, SweepEvent* e2) {
-	if (e1->p.x > e2->p.x) // Different x-coordinate
+	double x1 = e1->p.x;
+	double x2 = e2->p.x;
+	if (x1 > x2) // Different x-coordinate
 		return true;
-	if (e2->p.x > e1->p.x) // Different x-coordinate
+	if (x1 < x2) // Different x-coordinate
 		return false;
-	if (e1->p != e2->p) // Different points, but same x-coordinate. The event with lower y-coordinate is processed first
+	if (e1->p.y != e2->p.y) // Different points, but same x-coordinate. The event with lower y-coordinate is processed first
 		return e1->p.y > e2->p.y;
+	
 	if (e1->left != e2->left) // Same point, but one is a left endpoint and the other a right endpoint. The right endpoint is processed first
 		return e1->left;
-	// Same point, both events are left endpoints or both are right endpoints. The event associate to the bottom segment is processed first
-	return e1->above (e2->other->p);
+
+	if (signedArea (e1->p, e1->other->p) != 0) {
+		return !e1->below (e2->other->p);
+	}
+
+	return e1->pl != PolygonType::SUBJECT && e2->pl == PolygonType::SUBJECT;
 }
 
 // e1 and a2 are the left events of line segments (e1->p, e1->other->p) and (e2->p, e2->other->p)
@@ -140,10 +147,13 @@ void Martinez::compute (BoolOpType op, Polygon& result)
 			it = S.insert(e).first;
 			e->poss = new set<SweepEvent*>::iterator (it);
 			next = prev = it;
-			(prev != S.begin()) ? --prev : prev = S.end();
+
+			auto end = S.end ();
+
+			(prev != S.begin()) ? --prev : prev = end;
 
 			// Compute the inside and inOut flags
-			if (prev == S.end ()) {           // there is not a previous line segment in S?
+			if (prev == end) {           // there is not a previous line segment in S?
 				e->inside = e->inOut = false;
 			} else if ((*prev)->type != NORMAL) {
 				if (prev == S.begin ()) { // e overlaps with prev
@@ -175,18 +185,19 @@ void Martinez::compute (BoolOpType op, Polygon& result)
 			#endif
 
 			// Process a possible intersection between "e" and its next neighbor in S
-			if ((++next) != S.end())
+			if ((++next) != end)
 				possibleIntersection(e, *next);
 
 			// Process a possible intersection between "e" and its previous neighbor in S
-			if (prev != S.end ())
+			if (prev != end)
 				possibleIntersection(*prev, e);
 		} else { // the line segment must be removed from S
 			next = prev = sli = *(e->other->poss); // S.find (e->other);
 
 			// Get the next and previous line segments to "e" in S
 			++next;
-			(prev != S.begin()) ? --prev : prev = S.end();
+			auto end = S.end();
+			(prev != S.begin()) ? --prev : prev = end;
 
 			// Check if the line segment belongs to the Boolean operation
 			switch (e->type) {
@@ -220,7 +231,7 @@ void Martinez::compute (BoolOpType op, Polygon& result)
 			}
 			// delete line segment associated to e from S and check for intersection between the neighbors of "e" in S
 			S.erase (sli);
-			if (next != S.end() && prev != S.end())
+			if (next != end && prev != end)
 				possibleIntersection (*prev, *next);
 		}
 
@@ -285,6 +296,7 @@ void Martinez::possibleIntersection (SweepEvent* e1, SweepEvent* e2)
 
 	// The line segments overlap
 	vector<SweepEvent *> sortedEvents;
+	sortedEvents.reserve(4);
 	if (e1->p == e2->p) {
 		sortedEvents.push_back (0);
 	} else if (sec (e1, e2)) {

@@ -76,6 +76,10 @@ public:
 
 	void move (double x, double y);
 
+	void reserve (size_t ncontours) {
+		contours.reserve(ncontours);
+	}
+
 	Contour& pushbackContour () { contours.push_back (Contour ()); return contours.back (); }
 	Contour& pushbackContour (vector<Point> &pts) { contours.push_back (Contour (pts)); return contours.back (); }
 
