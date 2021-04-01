@@ -1,4 +1,5 @@
-const DEBUG = true
+const DEBUG = false
+// const DEBUG = true
 
 const FLAGS = ['-std=c++11']
 if (!DEBUG) {
@@ -37,6 +38,7 @@ module({
     ...common,
     name: 'astro-es',
     out: 'dist/astro.es.js',
+    outwasm: 'dist/astro.wasm',
     format: 'es',
 })
 

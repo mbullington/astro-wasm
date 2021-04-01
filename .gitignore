@@ -60,3 +60,4 @@ node_modules
 build
 bench/run
 dist
+.cache

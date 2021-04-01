@@ -6,8 +6,9 @@
   "author": "Michael Bullington <michael@bullington.xyz>",
   "license": "MIT",
   "scripts": {
-    "build": "wasmc -image mbullington/emsdk",
+    "build": "wasmc -docker-image mbullington/emsdk",
     "bench": "node bench/index.js",
+    "bench-browser": "parcel example/bench_parcel.html -p 5000",
     "clean": "rm -rf dist build bench/run",
     "serve": "serve"
   },
@@ -18,7 +19,13 @@
     "benchmark": "^2.1.4",
     "eslint": "^7.18.0",
     "eslint-config-mbullington": "^1.0.1",
+    "lodash": "^4.17.21",
+    "parcel-bundler": "^1.12.5",
     "serve": "^11.3.2",
+    "tar-js": "^0.3.0",
     "wasmc": "https://github.com/mbullington/js-wasmc.git"
-  }
+  },
+  "browserslist": [
+    "last 1 Chrome version"
+  ]
 }

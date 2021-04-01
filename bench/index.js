@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable no-magic-numbers */
-const Benchmark = require('benchmark').Benchmark
+const Benchmark = require('../third_party/benchmark').Benchmark
 const turf = require('@turf/turf')
+
+const Tar = require('./tarExtra')
 
 const { ready, Astro } = require('../dist/astro')
 const generatePolygonN = require('./generatePolygonN')
-
-const fs = require('fs')
-const path = require('path')
 
 function benchmarkArea(feature) {
     return new Promise((resolve, reject) => {
@@ -19,7 +18,6 @@ function benchmarkArea(feature) {
             .add('turf.area', () => turf.area(feature))
             .on('cycle', (event) => {
                 const { name, hz } = event.target
-
                 opsPerSecond[name] = hz
             })
             .on('complete', () => resolve(opsPerSecond))
@@ -40,7 +38,6 @@ function benchmarkUnion(a, b) {
             .add('turf.union', () => turf.union(a, b))
             .on('cycle', (event) => {
                 const { name, hz } = event.target
-
                 opsPerSecond[name] = hz
             })
             .on('complete', () => resolve(opsPerSecond))
@@ -61,7 +58,6 @@ function benchmarkIntersect(a, b) {
             .add('turf.intersect', () => turf.intersect(a, b))
             .on('cycle', (event) => {
                 const { name, hz } = event.target
-
                 opsPerSecond[name] = hz
             })
             .on('complete', () => resolve(opsPerSecond))
@@ -71,12 +67,7 @@ function benchmarkIntersect(a, b) {
 }
 
 ready.then(async () => {
-    // Make directory ahead of time.
-    try {
-        fs.mkdirSync(path.join(__dirname, 'run'))
-    } catch (e) {
-        console.warn(e)
-    }
+    const tape = new Tar()
 
     // Create polygons of n-size.
     const polygons = []
@@ -87,26 +78,33 @@ ready.then(async () => {
     // Benchmark area.
     for (let i = 0; i < polygons.length; i++) {
         const feature = polygons[i]
+
+        console.log(`area-${i}`)
         const result = await benchmarkArea(feature)
 
-        fs.writeFileSync(path.join(__dirname, 'run', `area-${i}.json`), JSON.stringify(result))
+        console.log(result)
+        await tape.appendAsync(`area-${i}.json`, JSON.stringify(result))
     }
 
     // Benchmark union.
     for (let i = 0; i < polygons.length - 1; i++) {
         const a = polygons[i]
         const b = turf.transformTranslate(polygons[i + 1], 20, 90)
+
+        console.log(`union-${i}`)
         const result = await benchmarkUnion(a, b)
 
-        fs.writeFileSync(path.join(__dirname, 'run', `union-${i}.json`), JSON.stringify(result))
+        await tape.appendAsync(`union-${i}.json`, JSON.stringify(result))
     }
 
     // Benchmark intersect.
     for (let i = 0; i < polygons.length - 1; i++) {
         const a = polygons[i]
         const b = turf.transformTranslate(polygons[i + 1], 20, 90)
+
+        console.log(`intersect-${i}`)
         const result = await benchmarkIntersect(a, b)
 
-        fs.writeFileSync(path.join(__dirname, 'run', `intersect-${i}.json`), JSON.stringify(result))
+        await tape.appendAsync(`intersect-${i}.json`, JSON.stringify(result))
     }
 })
