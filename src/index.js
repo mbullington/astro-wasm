@@ -55,3 +55,17 @@ export class Astro {
         return Astro.fromPtr(_polygon_intersect(this.ptr, other.ptr))
     }
 }
+
+export function withAstro(...args) {
+    if (args.length < 2) {
+        throw new Error('withAstro not called with enough arguments!')
+    }
+
+    const cb = args[args.length - 1]
+    const instances = args.splice(0, args.length - 1).map((feature) => new Astro(feature))
+
+    const res = cb(...instances)
+    // Make sure to clean up manual memory.
+    instances.forEach((astro) => astro.destroy())
+    return res
+}

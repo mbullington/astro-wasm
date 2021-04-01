@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable no-magic-numbers */
-const Benchmark = require('../third_party/benchmark').Benchmark
+
 const turf = require('@turf/turf')
 const Tar = require('tar-js')
 
-const { ready, Astro } = require('../dist/astro')
+const Benchmark = require('../third_party/benchmark').Benchmark
+
+const { ready, withAstro } = require('../dist/astro')
 
 const {
     generatePolygon,
@@ -17,34 +19,43 @@ const {
 } = require('./utils')
 
 function benchmarkArea(feature) {
-    const astro = new Astro(feature)
-    const suite = new Benchmark.Suite()
-        .add('astro.area', () => astro.area())
-        .add('turf.area', () => turf.area(feature))
+    return withAstro(feature, (astro) => {
+        const suite = new Benchmark.Suite()
+            .add('astro.area', () => astro.area())
+            .add('turf.area', () => turf.area(feature))
 
-    return runAndWaitOnSuite(suite)
+        return runAndWaitOnSuite(suite)
+    })
 }
 
 function benchmarkUnion(a, b) {
-    const astroA = new Astro(a)
-    const astroB = new Astro(b)
+    return withAstro(a, b, (astroA, astroB) => {
+        const suite = new Benchmark.Suite()
+            .add('astro.union', () => astroA.union(astroB))
+            .add('turf.union', () => turf.union(a, b))
 
-    const suite = new Benchmark.Suite()
-        .add('astro.union', () => astroA.union(astroB))
-        .add('turf.union', () => turf.union(a, b))
+        return runAndWaitOnSuite(suite)
+    })
+}
 
-    return runAndWaitOnSuite(suite)
+function benchmarkDifference(a, b) {
+    return withAstro(a, b, (astroA, astroB) => {
+        const suite = new Benchmark.Suite()
+            .add('astro.difference', () => astroA.difference(astroB))
+            .add('turf.difference', () => turf.difference(a, b))
+
+        return runAndWaitOnSuite(suite)
+    })
 }
 
 function benchmarkIntersect(a, b) {
-    const astroA = new Astro(a)
-    const astroB = new Astro(b)
+    return withAstro(a, b, (astroA, astroB) => {
+        const suite = new Benchmark.Suite()
+            .add('astro.intersect', () => astroA.intersect(astroB))
+            .add('turf.intersect', () => turf.intersect(a, b))
 
-    const suite = new Benchmark.Suite()
-        .add('astro.intersect', () => astroA.intersect(astroB))
-        .add('turf.intersect', () => turf.intersect(a, b))
-
-    return runAndWaitOnSuite(suite)
+        return runAndWaitOnSuite(suite)
+    })
 }
 
 ready.then(async () => {
@@ -57,7 +68,7 @@ ready.then(async () => {
         polygons.push(generatePolygon(i))
     }
 
-    // Benchmark area.
+    // Area algorithm.
     for (let i = 0; i < polygons.length; i++) {
         const feature = polygons[i]
 
@@ -67,25 +78,31 @@ ready.then(async () => {
         await tarAppend(tape, `area-${i}.json`, JSON.stringify(result))
     }
 
-    // Benchmark union.
+    // Boolean operations.
     for (let i = 0; i < polygons.length - 1; i++) {
         const a = polygons[i]
         const b = generateTranslatedPair(a)
+        /**
+         * @type {{ [name: string]: number }}
+         */
+        let result = {}
+
+        // Benchmark union.
 
         console.log(`union-${i}`)
-        const result = await benchmarkUnion(a, b)
-
+        result = await benchmarkUnion(a, b)
         await tarAppend(tape, `union-${i}.json`, JSON.stringify(result))
-    }
 
-    // Benchmark intersect.
-    for (let i = 0; i < polygons.length - 1; i++) {
-        const a = polygons[i]
-        const b = generateTranslatedPair(a)
+        // Benchmark difference.
+
+        console.log(`difference-${i}`)
+        result = await benchmarkDifference(a, b)
+        await tarAppend(tape, `difference-${i}.json`, JSON.stringify(result))
+
+        // Benchmark intersect.
 
         console.log(`intersect-${i}`)
-        const result = await benchmarkIntersect(a, b)
-
+        result = await benchmarkIntersect(a, b)
         await tarAppend(tape, `intersect-${i}.json`, JSON.stringify(result))
     }
 })

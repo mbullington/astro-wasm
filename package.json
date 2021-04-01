@@ -16,7 +16,6 @@
     "@babel/core": "^7.13.10",
     "@babel/node": "^7.13.10",
     "@turf/turf": "^6.3.0",
-    "benchmark": "^2.1.4",
     "eslint": "^7.18.0",
     "eslint-config-mbullington": "^1.0.1",
     "lodash": "^4.17.21",
