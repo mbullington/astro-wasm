@@ -41,10 +41,11 @@ function generateTranslatedPair(polygon) {
  * @param {Tar} tape
  * @param {string} name
  * @param {any} data
+ * @returns {Promise<Uint8Array>}
  */
 function tarAppend(tape, name, data) {
     return new Promise((resolve) => {
-        Tar.prototype.append.call(tape, name, data, () => resolve())
+        Tar.prototype.append.call(tape, name, data, (array) => resolve(array))
     })
 }
 

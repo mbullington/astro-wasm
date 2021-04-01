@@ -3,6 +3,7 @@
 
 const turf = require('@turf/turf')
 const Tar = require('tar-js')
+const { saveAs } = require('file-saver')
 
 const Benchmark = require('../third_party/benchmark').Benchmark
 
@@ -105,4 +106,7 @@ ready.then(async () => {
         result = await benchmarkIntersect(a, b)
         await tarAppend(tape, `intersect-${i}.json`, JSON.stringify(result))
     }
+
+    const blob = new Blob([tape.out], { type: 'data:application/tar;charset=utf-8' })
+    saveAs(blob, 'run.tar')
 })
