@@ -2,8 +2,7 @@
 /* eslint-disable no-magic-numbers */
 const Benchmark = require('../third_party/benchmark').Benchmark
 const turf = require('@turf/turf')
-
-const Tar = require('./tarExtra')
+const Tar = require('tar-js')
 
 const { ready, Astro } = require('../dist/astro')
 
