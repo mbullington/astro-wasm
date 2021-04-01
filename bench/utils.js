@@ -6,8 +6,8 @@ const RADIUS_KM = 400
 
 // Exported parameters for our polygon sizes.
 const MIN_POLYGON = 3
-const ITER = 20
-const STEP = 10
+const ITER = 10
+const STEP = 15
 
 // 90deg north is right.
 const RIGHT_DEG = 90

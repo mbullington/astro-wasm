@@ -80,7 +80,7 @@ ready.then(async () => {
     }
 
     // Boolean operations.
-    for (let i = 0; i < polygons.length - 1; i++) {
+    for (let i = 0; i < polygons.length; i++) {
         const a = polygons[i]
         const b = generateTranslatedPair(a)
         /**
