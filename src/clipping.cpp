@@ -7,30 +7,34 @@
 
 using namespace std;
 
-EXPORT Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) asm("polygon_union");
-EXPORT Polygon *polygon_difference(Polygon *polygon1, Polygon *polygon2) asm("polygon_difference");
-EXPORT Polygon *polygon_intersect(Polygon *polygon1, Polygon *polygon2) asm("polygon_intersect");
+EXPORT MultiPolygon *polygon_union(MultiPolygon *multi1, MultiPolygon *multi2) asm("polygon_union");
+EXPORT MultiPolygon *polygon_difference(MultiPolygon *multi1, MultiPolygon *multi2) asm("polygon_difference");
+EXPORT MultiPolygon *polygon_intersect(MultiPolygon *multi1, MultiPolygon *multi2) asm("polygon_intersect");
 
-Polygon *polygon_clipping(Polygon *polygon1, Polygon *polygon2, martinez::Martinez::BoolOpType op) {
+MultiPolygon *polygon_clipping(MultiPolygon *multi1, MultiPolygon *multi2, martinez::Martinez::BoolOpType op) {
     martinez::Polygon subj;
     martinez::Polygon clip;
 
-    // Add contours for polygon1.
-    size_t size1 = polygon1->size();
-    subj.reserve(size1);
-    int i = 0;
-    for (; i < size1; i++) {
-        LinearRing ring = polygon1->at(i);
-        martinez::Contour *contour = &subj.pushbackContour(ring);
+    // Add contours for multi1 to subj.
+    for (auto & polygon : *multi1) {
+        size_t size1 = polygon.size();
+        subj.reserve(size1);
+        int i = 0;
+        for (; i < size1; i++) {
+            LinearRing ring = polygon[i];
+            martinez::Contour *contour = &subj.pushbackContour(ring);
+        }
     }
 
-    // Add contours for polygon2.
-    size_t size2 = polygon2->size();
-    clip.reserve(size2);
-    i = 0;
-    for (; i < size2; i++) {
-        LinearRing ring = polygon2->at(i);
-        martinez::Contour *contour = &clip.pushbackContour(ring);
+    // Add contours for polygon2 to clip.
+    for (auto & polygon : *multi2) {
+        size_t size1 = polygon.size();
+        clip.reserve(size1);
+        int i = 0;
+        for (; i < size1; i++) {
+            LinearRing ring = polygon[i];
+            martinez::Contour *contour = &clip.pushbackContour(ring);
+        }
     }
 
     martinez::Polygon mrResult;
@@ -38,24 +42,26 @@ Polygon *polygon_clipping(Polygon *polygon1, Polygon *polygon2, martinez::Martin
     martinez::Martinez mr (subj, clip);
     mr.compute(op, mrResult);
 
-    Polygon *result = new Polygon();
+    MultiPolygon *result = new MultiPolygon();
     // Add coutours back.
     result->reserve(mrResult.ncontours());
     for (auto it = mrResult.begin(); it != mrResult.end(); ++it) {
-        result->push_back(it->points);
+        Polygon polygon;
+        polygon.push_back(it->points);
+        result->push_back(polygon);
     }
 
     return result;
 }
 
-Polygon *polygon_union(Polygon *polygon1, Polygon *polygon2) {
-    return polygon_clipping(polygon1, polygon2, martinez::Martinez::UNION);
+MultiPolygon *polygon_union(MultiPolygon *multi1, MultiPolygon *multi2) {
+    return polygon_clipping(multi1, multi2, martinez::Martinez::UNION);
 }
 
-Polygon *polygon_difference(Polygon *polygon1, Polygon *polygon2) {
-    return polygon_clipping(polygon1, polygon2, martinez::Martinez::DIFFERENCE);
+MultiPolygon *polygon_difference(MultiPolygon *multi1, MultiPolygon *multi2) {
+    return polygon_clipping(multi1, multi2, martinez::Martinez::DIFFERENCE);
 }
 
-Polygon *polygon_intersect(Polygon *polygon1, Polygon *polygon2) {
-    return polygon_clipping(polygon1, polygon2, martinez::Martinez::INTERSECTION);
+MultiPolygon *polygon_intersect(MultiPolygon *multi1, MultiPolygon *multi2) {
+    return polygon_clipping(multi1, multi2, martinez::Martinez::INTERSECTION);
 }

@@ -21,8 +21,16 @@ const {
 
 function benchmarkArea(feature) {
     return withAstro(feature, (astro) => {
+        let temp
         const suite = new Benchmark.Suite()
-            .add('astro.area', () => astro.area())
+            .add('astro.area', () => (temp = astro.area()), {
+                onCycle() {
+                    if (temp) {
+                        temp.destroy()
+                        temp = null
+                    }
+                },
+            })
             .add('turf.area', () => turf.area(feature))
 
         return runAndWaitOnSuite(suite)
@@ -31,8 +39,16 @@ function benchmarkArea(feature) {
 
 function benchmarkUnion(a, b) {
     return withAstro(a, b, (astroA, astroB) => {
+        let temp
         const suite = new Benchmark.Suite()
-            .add('astro.union', () => astroA.union(astroB))
+            .add('astro.union', () => (temp = astroA.union(astroB)), {
+                onCycle() {
+                    if (temp) {
+                        temp.destroy()
+                        temp = null
+                    }
+                },
+            })
             .add('turf.union', () => turf.union(a, b))
 
         return runAndWaitOnSuite(suite)
@@ -41,8 +57,16 @@ function benchmarkUnion(a, b) {
 
 function benchmarkDifference(a, b) {
     return withAstro(a, b, (astroA, astroB) => {
+        let temp
         const suite = new Benchmark.Suite()
-            .add('astro.difference', () => astroA.difference(astroB))
+            .add('astro.difference', () => (temp = astroA.difference(astroB)), {
+                onCycle() {
+                    if (temp) {
+                        temp.destroy()
+                        temp = null
+                    }
+                },
+            })
             .add('turf.difference', () => turf.difference(a, b))
 
         return runAndWaitOnSuite(suite)
@@ -51,8 +75,16 @@ function benchmarkDifference(a, b) {
 
 function benchmarkIntersect(a, b) {
     return withAstro(a, b, (astroA, astroB) => {
+        let temp
         const suite = new Benchmark.Suite()
-            .add('astro.intersect', () => astroA.intersect(astroB))
+            .add('astro.intersect', () => (temp = astroA.intersect(astroB)), {
+                onCycle() {
+                    if (temp) {
+                        temp.destroy()
+                        temp = null
+                    }
+                },
+            })
             .add('turf.intersect', () => turf.intersect(a, b))
 
         return runAndWaitOnSuite(suite)

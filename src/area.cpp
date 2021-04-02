@@ -15,6 +15,8 @@ using namespace std;
 
 EXPORT double polygon_area(Polygon *polygon) asm("polygon_area");
 
+EXPORT double polygon_area_multi(MultiPolygon *multi) asm("polygon_area_multi");
+
 double rad(double deg);
 
 /**
@@ -87,6 +89,15 @@ double polygon_area(Polygon *polygon) {
 
     return total;
 };
+
+double polygon_area_multi(MultiPolygon *multi) {
+    size_t total = 0;
+    for (auto & polygon : *multi) {
+      total += polygon_area(&polygon);
+    }
+
+    return total;
+}
 
 double rad(double deg) {
     return deg * PI / 180;

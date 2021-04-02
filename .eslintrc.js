@@ -20,6 +20,7 @@ module.exports = Object.assign(config, {
         _delete_multi_polygon: 'readonly',
         // area.cpp
         _polygon_area: 'readonly',
+        _polygon_area_multi: 'readonly',
         // clipping.cpp
         _polygon_union: 'readonly',
         _polygon_difference: 'readonly',
