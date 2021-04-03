@@ -64,7 +64,6 @@ public:
 	typedef vector<Contour>::iterator iterator;
 	
 	Polygon () : contours () {}
-	Polygon (const string& filename);
 	/** Get the p-th contour */
 	Contour& contour (unsigned p) { return contours[p]; }
 	/** Number of contours */

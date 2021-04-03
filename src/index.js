@@ -49,7 +49,6 @@ const GEOMETRIES = {
     MultiPolygon: {
         create(coordinates) {
             const createPolygon = GEOMETRIES.Polygon.create
-            const destroyPolygon = GEOMETRIES.Polygon.destroy
 
             let i = 0
             const multiPolygonPtr = _create_multi_polygon()
@@ -59,7 +58,7 @@ const GEOMETRIES = {
 
                 _push_multi_polygon(multiPolygonPtr, polygonPtr)
                 // Destroy since _push_multi_polygon has copied the contents into new memory.
-                destroyPolygon(polygon)
+                _delete_polygon(polygonPtr)
             }
 
             return multiPolygonPtr
@@ -158,55 +157,85 @@ export class Astro {
     union(other) {
         let ptr1 = this.ptr
         let ptr2 = other.ptr
+
+        let created1 = false
+        let created2 = false
+
         // Normalize as MultiPolygons.
         if (this.type === 'Polygon') {
             const polygonPtr = ptr1
             ptr1 = _create_multi_polygon()
             _push_multi_polygon(ptr1, polygonPtr)
+            created1 = true
         }
         if (other.type === 'Polygon') {
             const polygonPtr = ptr2
             ptr2 = _create_multi_polygon()
             _push_multi_polygon(ptr2, polygonPtr)
+            created2 = true
         }
 
-        return Astro.fromPtr(_polygon_union(ptr1, ptr2), 'MultiPolygon')
+        const resp = Astro.fromPtr(_polygon_union(ptr1, ptr2), 'MultiPolygon')
+
+        if (created1) _delete_multi_polygon(ptr1)
+        if (created2) _delete_multi_polygon(ptr2)
+        return resp
     }
 
     difference(other) {
         let ptr1 = this.ptr
         let ptr2 = other.ptr
+
+        let created1 = false
+        let created2 = false
+
         // Normalize as MultiPolygons.
         if (this.type === 'Polygon') {
             const polygonPtr = ptr1
             ptr1 = _create_multi_polygon()
             _push_multi_polygon(ptr1, polygonPtr)
+            created1 = true
         }
         if (other.type === 'Polygon') {
             const polygonPtr = ptr2
             ptr2 = _create_multi_polygon()
             _push_multi_polygon(ptr2, polygonPtr)
+            created2 = true
         }
 
-        return Astro.fromPtr(_polygon_difference(ptr1, ptr2), 'MultiPolygon')
+        const resp = Astro.fromPtr(_polygon_difference(ptr1, ptr2), 'MultiPolygon')
+
+        if (created1) _delete_multi_polygon(ptr1)
+        if (created2) _delete_multi_polygon(ptr2)
+        return resp
     }
 
     intersect(other) {
         let ptr1 = this.ptr
         let ptr2 = other.ptr
+
+        let created1 = false
+        let created2 = false
+
         // Normalize as MultiPolygons.
         if (this.type === 'Polygon') {
             const polygonPtr = ptr1
             ptr1 = _create_multi_polygon()
             _push_multi_polygon(ptr1, polygonPtr)
+            created1 = true
         }
         if (other.type === 'Polygon') {
             const polygonPtr = ptr2
             ptr2 = _create_multi_polygon()
             _push_multi_polygon(ptr2, polygonPtr)
+            created2 = true
         }
 
-        return Astro.fromPtr(_polygon_intersect(ptr1, ptr2), 'MultiPolygon')
+        const resp = Astro.fromPtr(_polygon_intersect(ptr1, ptr2), 'MultiPolygon')
+
+        if (created1) _delete_multi_polygon(ptr1)
+        if (created2) _delete_multi_polygon(ptr2)
+        return resp
     }
 
     toGeoJSON() {

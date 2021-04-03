@@ -17,6 +17,7 @@
 #include <queue>
 #include <vector>
 #include <set>
+#include <memory>
 
 using namespace std;
 
@@ -65,17 +66,17 @@ private:
 	static void print (SweepEvent& e); // This function is intended for debugging purposes
 
 	struct SweepEventComp : public binary_function<SweepEvent*, SweepEvent*, bool> {
-		bool operator() (SweepEvent* e1, SweepEvent* e2);
+		bool operator() (const SweepEvent* e1, const SweepEvent* e2) const;
 	};
 
 	struct SegmentComp : public binary_function<SweepEvent*, SweepEvent*, bool> {
-		bool operator() (SweepEvent* e1, SweepEvent* e2);
+		bool operator() (const SweepEvent* e1, const SweepEvent* e2) const;
 	};
 	
 	/** @brief Event Queue */
 	priority_queue<SweepEvent*, vector<SweepEvent*>, SweepEventComp> eq;
 	/** @brief It holds the events generated during the computation of the boolean operation */
-	deque<SweepEvent> eventHolder;
+	vector<shared_ptr<SweepEvent>> eventHolder;
 	/** @brief Polygon 1 */
 	Polygon& subject;
 	/** @brief Polygon 2 */
@@ -91,7 +92,9 @@ private:
 	/** @brief Divide the segment associated to left event e, updating pq and (implicitly) the status line */
 	void divideSegment (SweepEvent *e, const Point& p);
 	/** @brief Store the SweepEvent e into the event holder, returning the address of e */
-	SweepEvent *storeSweepEvent(const SweepEvent& e) { eventHolder.push_back (e); return &eventHolder.back (); }
+	void storeSweepEvent(shared_ptr<SweepEvent> & e) {
+		eventHolder.push_back (e);
+	}
 };
 
 }

@@ -22,7 +22,7 @@ MultiPolygon *polygon_clipping(MultiPolygon *multi1, MultiPolygon *multi2, marti
         int i = 0;
         for (; i < size1; i++) {
             LinearRing ring = polygon[i];
-            martinez::Contour *contour = &subj.pushbackContour(ring);
+            subj.pushbackContour(ring);
         }
     }
 
@@ -33,7 +33,7 @@ MultiPolygon *polygon_clipping(MultiPolygon *multi1, MultiPolygon *multi2, marti
         int i = 0;
         for (; i < size1; i++) {
             LinearRing ring = polygon[i];
-            martinez::Contour *contour = &clip.pushbackContour(ring);
+            clip.pushbackContour(ring);
         }
     }
 

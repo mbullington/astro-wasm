@@ -16,6 +16,8 @@
 
 using namespace martinez;
 
+using std::shared_ptr;
+
 namespace martinez {
 
 // #define _DEBUG_ // uncomment this line if you want to debug the computation of the boolean operation
@@ -31,7 +33,7 @@ namespace martinez {
 
 // Compare two sweep events
 // Return true means that e1 is placed at the event queue after e2, i.e,, e1 is processed by the algorithm after e2
-bool Martinez::SweepEventComp::operator() (SweepEvent* e1, SweepEvent* e2) {
+bool Martinez::SweepEventComp::operator() (const SweepEvent* e1, const SweepEvent* e2) const {
 	double x1 = e1->p.x;
 	double x2 = e2->p.x;
 	if (x1 > x2) // Different x-coordinate
@@ -52,7 +54,7 @@ bool Martinez::SweepEventComp::operator() (SweepEvent* e1, SweepEvent* e2) {
 }
 
 // e1 and a2 are the left events of line segments (e1->p, e1->other->p) and (e2->p, e2->other->p)
-bool Martinez::SegmentComp::operator() (SweepEvent* e1, SweepEvent* e2) {
+bool Martinez::SegmentComp::operator() (const SweepEvent* e1, const SweepEvent* e2) const {
 	if (e1 == e2)
 		return false;
 	if (signedArea (e1->p, e1->other->p, e2->p) != 0 || signedArea (e1->p, e1->other->p, e2->other->p) != 0) {
@@ -145,6 +147,10 @@ void Martinez::compute (BoolOpType op, Polygon& result)
 
 		if (e->left) { // the line segment must be inserted into S
 			it = S.insert(e).first;
+			// Avoid potential memory leak.
+			if (e->poss != NULL) {
+				delete e->poss;
+			}
 			e->poss = new set<SweepEvent*>::iterator (it);
 			next = prev = it;
 
@@ -249,9 +255,12 @@ void Martinez::processSegment (const Segment& s, PolygonType pl)
 {
 	if (s.begin () == s.end ()) // if the two edge endpoints are equal the segment is dicarded
 		return;                 // in the future this can be done as preprocessing to avoid "polygons" with less than 3 edges
-	SweepEvent* e1 = storeSweepEvent (SweepEvent(s.begin(), true, pl, 0));
-	SweepEvent* e2 = storeSweepEvent (SweepEvent(s.end(), true, pl, e1));
-	e1->other = e2;
+	auto e1 = shared_ptr<SweepEvent>(new SweepEvent(s.begin(), true, pl, 0));
+	storeSweepEvent(e1);
+	auto e2 = shared_ptr<SweepEvent>(new SweepEvent(s.end(), true, pl, e1.get()));
+	storeSweepEvent(e2);
+
+	e1->other = e2.get();
 
 	if (e1->p.x < e2->p.x) {
 		e2->left = false;
@@ -262,8 +271,8 @@ void Martinez::processSegment (const Segment& s, PolygonType pl)
 	} else {
 		e1->left = false;
 	}
-	eq.push (e1);
-	eq.push (e2);
+	eq.push (e1.get());
+	eq.push (e2.get());
 }
 
 void Martinez::possibleIntersection (SweepEvent* e1, SweepEvent* e2)
@@ -348,9 +357,15 @@ void Martinez::possibleIntersection (SweepEvent* e1, SweepEvent* e2)
 void Martinez::divideSegment (SweepEvent* e, const Point& p)
 {
 	// "Right event" of the "left line segment" resulting from dividing e (the line segment associated to e)
-	SweepEvent *r = storeSweepEvent(SweepEvent(p, false, e->pl, e, e->type));
+	auto rPtr = shared_ptr<SweepEvent>(new SweepEvent(p, false, e->pl, e, e->type));
+	storeSweepEvent(rPtr);
+	SweepEvent *r = rPtr.get();
+
 	// "Left event" of the "right line segment" resulting from dividing e (the line segment associated to e)
-	SweepEvent *l = storeSweepEvent(SweepEvent(p, true, e->pl, e->other, e->other->type));
+	auto lPtr = shared_ptr<SweepEvent>(new SweepEvent(p, true, e->pl, e->other, e->other->type));
+	storeSweepEvent(lPtr);
+	SweepEvent *l = lPtr.get();
+
 	if (sec (l, e->other)) { // avoid a rounding error. The left event would be processed after the right event
 		e->other->left = true;
 		l->left = false;

@@ -31,8 +31,8 @@ double rad(double deg);
  * @param {Array<Array<number>>} coords Ring Coordinates
  * @returns {number} The approximate signed geodesic area of the polygon in square meters.
  */
-double ring_area(LinearRing *ring) {
-    size_t length = ring->size();
+double ring_area(LinearRing & ring) {
+    size_t length = ring.size();
     if (length <= 2) {
         return 0;
     }
@@ -62,9 +62,9 @@ double ring_area(LinearRing *ring) {
         upperIndex = i + 2;
       }
 
-      p1 = &(*ring)[lowerIndex];
-      p2 = &(*ring)[middleIndex];
-      p3 = &(*ring)[upperIndex];
+      p1 = &ring[lowerIndex];
+      p2 = &ring[middleIndex];
+      p3 = &ring[upperIndex];
 
       // total += p1.lng;
       total += (rad(p3->x) - rad(p1->x)) * sin(rad(p2->y));
@@ -84,7 +84,7 @@ double polygon_area(Polygon *polygon) {
     for (; i < length; i++) {
         // The other rings are 'holes' so we subtract them.
         double modifier = i == 0 ? 1 : -1;
-        total += modifier * abs(ring_area(&(*polygon)[i]));
+        total += modifier * abs(ring_area((*polygon)[i]));
     }
 
     return total;

@@ -4,11 +4,11 @@ const DEBUG = false
 const SIMD = false
 // const SIMD = true
 
-const FLAGS = ['-std=c++11', '-s ALLOW_MEMORY_GROWTH=1']
+const FLAGS = ['-std=c++11', '-flto', '-s ALLOW_MEMORY_GROWTH=1', '-s MALLOC=emmalloc']
 if (!DEBUG) {
     FLAGS.push('-O3')
-    FLAGS.push('-flto')
-    FLAGS.push('-ffast-math')
+    FLAGS.push('-fno-rtti')
+    FLAGS.push('-fno-exceptions')
 } else {
     FLAGS.push('-O0')
     FLAGS.push('--profiling')

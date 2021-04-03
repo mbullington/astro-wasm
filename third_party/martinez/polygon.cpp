@@ -2,7 +2,6 @@
 #include "utilities.h"
 #include <limits>
 #include <set>
-#include <fstream>
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
@@ -58,21 +57,6 @@ ostream& operator<< (ostream& o, Contour& c)
 		++i;
 	}
 	return o;
-}
-
-Polygon::Polygon (const string& filename)
-{
-	ifstream f (filename.c_str ());
-	if (!f) {
-		cerr << "Error opening " << filename << '\n';
-		exit (1);
-	}
-	f.exceptions (ios_base::failbit | ios_base::badbit);
-	try {
-		f >> *this;
-	} catch (ios_base::failure) {
-		cerr << "An error reading file " << filename << " happened\n";
-	}
 }
 
 unsigned Polygon::nvertices () const
