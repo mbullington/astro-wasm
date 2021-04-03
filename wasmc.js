@@ -1,12 +1,21 @@
 const DEBUG = false
 // const DEBUG = true
 
-const FLAGS = ['-std=c++11']
+const SIMD = false
+// const SIMD = true
+
+const FLAGS = ['-std=c++11', '-s ALLOW_MEMORY_GROWTH=1']
 if (!DEBUG) {
     FLAGS.push('-O3')
+    FLAGS.push('-flto')
+    FLAGS.push('-ffast-math')
 } else {
     FLAGS.push('-O0')
     FLAGS.push('--profiling')
+}
+
+if (SIMD) {
+    FLAGS.push('-msimd128')
 }
 
 // Add include for submodules.

@@ -21,16 +21,8 @@ const {
 
 function benchmarkArea(feature) {
     return withAstro(feature, (astro) => {
-        let temp
         const suite = new Benchmark.Suite()
-            .add('astro.area', () => (temp = astro.area()), {
-                onCycle() {
-                    if (temp) {
-                        temp.destroy()
-                        temp = null
-                    }
-                },
-            })
+            .add('astro.area', () => astro.area())
             .add('turf.area', () => turf.area(feature))
 
         return runAndWaitOnSuite(suite)
