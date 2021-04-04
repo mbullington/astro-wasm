@@ -94,14 +94,14 @@ ready.then(async () => {
     }
 
     // Area algorithm.
-    // for (let i = 0; i < polygons.length; i++) {
-    //     const feature = polygons[i]
+    for (let i = 0; i < polygons.length; i++) {
+        const feature = polygons[i]
 
-    //     console.log(`area-${i}`)
-    //     const result = await benchmarkArea(feature)
+        console.log(`area-${i}`)
+        const result = await benchmarkArea(feature)
 
-    //     await tarAppend(tape, `area-${i}.json`, JSON.stringify(result))
-    // }
+        await tarAppend(tape, `area-${i}.json`, JSON.stringify(result))
+    }
 
     // Boolean operations.
     for (let i = 0; i < polygons.length; i++) {
