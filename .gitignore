@@ -61,3 +61,8 @@ build
 bench/run
 dist
 .cache
+
+*_area.png
+*_difference.png
+*_intersect.png
+*_union.png
